@@ -53,51 +53,27 @@
 
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
 
-        localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
-            CDVPluginResult* pluginResult = nil;
-            if (viewController != nil)
-            {
-                // Login required
-                [self.viewController presentViewController:viewController animated:YES completion:nil];
-            }
-            else
-            {
-                if (localPlayer.isAuthenticated)
-                {
-                    [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^(NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error) {
-                        __block CDVPluginResult* pluginResult = nil;
-                        if(error != nil)
-                        {
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                        } else {
-                            NSDictionary* user = @{
-                                   @"playerId":localPlayer.playerID,
-                                   @"alias":localPlayer.alias,
-                                   @"displayName":localPlayer.displayName,
-                                   @"publicKeyUrl":[publicKeyUrl absoluteString],
-                                   @"signature":[self base64forData:signature],
-                                   @"salt":[self base64forData:salt],
-                                   @"timestamp":@(timestamp),
-                                   @"bundleId": [[NSBundle mainBundle] bundleIdentifier]
-                            };
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                        }
-
-                    }];
-
-                }
-                else if (error != nil)
-                {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                }
-                else
-                {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                }
+                [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^(NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error) {
+                    __block CDVPluginResult* pluginResult = nil;
+                    if(error != nil)
+                    {
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    } else {
+                        NSDictionary* user = @{
+                               @"playerId":localPlayer.playerID,
+                               @"alias":localPlayer.alias,
+                               @"displayName":localPlayer.displayName,
+                               @"publicKeyUrl":[publicKeyUrl absoluteString],
+                               @"signature":[self base64forData:signature],
+                               @"salt":[self base64forData:salt],
+                               @"timestamp":@(timestamp),
+                               @"bundleId": [[NSBundle mainBundle] bundleIdentifier]
+                        };
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    }
+                }];
             }
         };
     }];
