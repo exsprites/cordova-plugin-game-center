@@ -52,6 +52,17 @@ var successCallback = function (user) {
 
 gamecenter.auth(successCallback, failureCallback);
 ```
+### Generate Identity Verification
+
+Added new method for verification user on server
+```
+var successCallback = function (localPlayer) {
+    alert(user.alias);
+ //localPlayer.playerID, localPlayer.alias,localPlayer.displayName,
+ //localPlayer.publicKeyUrl, localPlayer.signature, localPlayer.salt, localPlayer.tamestamp, localPlayer.bundleId                
+
+gamecenter.generateIdentityVerification(successCallback, failureCallback);
+```
 
 ### Fetch Player Image
 
