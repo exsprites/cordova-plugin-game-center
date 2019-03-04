@@ -47,6 +47,45 @@
     }];
 }
 
+-(void)checkAuth:(CDVInvokedUrlCommand*)command;
+{
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
+        if([GKLocalPlayer localPlayer].isAuthenticated)
+        {
+            NSDictionary* status = @{@"isAuth":@true};
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:status];
+        }
+        else
+        {
+            NSDictionary* status = @{@"isAuth":@false};
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:status];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+     }];
+}
+
+-(void)getUserData:(CDVInvokedUrlCommand*)command;
+{
+    [self.commandDelegate runInBackground:^{
+        CDVPluginResult* pluginResult = nil;
+        if([GKLocalPlayer localPlayer].isAuthenticated)
+        {
+            NSDictionary* user = @{
+                @"alias":[GKLocalPlayer localPlayer].alias,
+                @"displayName":[GKLocalPlayer localPlayer].displayName,
+                @"playerID":[GKLocalPlayer localPlayer].playerID
+            };
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
+        }
+        else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"not isAuthenticated"];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
 - (void) generateIdentityVerification:(CDVInvokedUrlCommand*)command;
 {
     [self.commandDelegate runInBackground:^{
@@ -158,6 +197,36 @@
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     }
+}
+
+- (void)getPlayerScore:(CDVInvokedUrlCommand *)command {
+ 	NSString *leaderboardId = [command.arguments objectAtIndex:0];
+
+	GKLeaderboard *leaderboard = [[GKLeaderboard alloc] init];
+  	leaderboard.identifier = leaderboardId;
+	[leaderboard loadScoresWithCompletionHandler: ^(NSArray *scores, NSError *error) {
+		if (error) {
+			NSLog(@"%@", error);
+
+			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+			//[pr setKeepCallbackAsBool:YES];
+			//[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+			CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+			//[pr setKeepCallbackAsBool:YES];
+			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+		}
+		else if (scores) {
+			GKScore *s = leaderboard.localPlayerScore;
+			NSLog(@"Local player's score: %lld", s.value);
+
+            CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%lld", s.value]];
+ 			//[pr setKeepCallbackAsBool:YES];
+			[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+			//CDVPluginResult* pr = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+			//[pr setKeepCallbackAsBool:YES];
+			//[self.commandDelegate sendPluginResult:pr callbackId:command.callbackId];
+		}
+	}];
 }
 
 - (void) reportAchievement:(CDVInvokedUrlCommand*)command;
