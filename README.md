@@ -4,39 +4,20 @@ This plugin allows developers to utilise the iOS Game Center in their Cordova / 
 
 The code under active development and currently has support for [auth](#auth), [submitting a score](#submit-score) and [showing leaderboards](#show-leaderboard) using the native viewcontroller.
 
-#### Live demo
-
-See this plugin working in a live app: [playadds.com](http://playadds.com)
-
 ### Before you start
 
 Adding Game Center support requires more than simple coding changes. To create a Game Center-aware game, you need to understand these basics before you begin writing code. The full outline of all the Game Center concepts and impacts can be viewed [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/GameKit_Guide/GameCenterOverview/GameCenterOverview.html).
 
 ## Install
 
-#### Latest published version on npm (with Cordova CLI >= 5.0.0)
-
-```
-cordova plugin add cordova-plugin-game-center
-```
-
 #### Latest version from GitHub
 
 ```
-cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
+cordova plugin add https://github.com/DiRaiks/cordova-plugin-game-center.git
 ```
 
 You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
 
-#### PhoneGap build
-
-Add the following to your `config.xml` to use version 0.4.1 (you can also omit the version attribute to always use the latest version). You should now use the npm source:
-
-```
-<gap:plugin name="cordova-plugin-game-center" version="0.4.1" source="npm" />
-```
-
-For more information, see the [PhoneGap build docs](http://docs.build.phonegap.com/en_US/configuring_plugins.md.html#Plugins).
 
 ## Usage
 
@@ -52,6 +33,30 @@ var successCallback = function (user) {
 
 gamecenter.auth(successCallback, failureCallback);
 ```
+### checkAuth
+
+Method for checking Auth on Game Center
+```
+var successCallback = function (status) {
+    alert(status.isAuth);
+    // 1
+};
+
+gamecenter.checkAuth(successCallback, failureCallback);
+```
+
+### getUserData
+
+Method for geting user information after auth
+```
+var successCallback = function (status) {
+    alert(status.isAuth);
+    // user.alias, user.playerID, user.displayName
+};
+
+gamecenter.getUserData(successCallback, failureCallback);
+```
+
 ### Generate Identity Verification
 
 Added new method for verification user on server

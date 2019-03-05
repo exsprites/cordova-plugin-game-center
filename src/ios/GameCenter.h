@@ -11,6 +11,8 @@
 @interface GameCenter : CDVPlugin <GKGameCenterControllerDelegate>
 
 - (void) auth:(CDVInvokedUrlCommand*)command;
+- (void) checkAuth:(CDVInvokedUrlCommand*)command;
+- (void) getUserData:(CDVInvokedUrlCommand*)command;
 - (void) generateIdentityVerification:(CDVInvokedUrlCommand*)command;
 - (void) getPlayerImage:(CDVInvokedUrlCommand*)command;
 - (void) submitScore:(CDVInvokedUrlCommand*)command;
