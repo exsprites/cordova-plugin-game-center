@@ -47,7 +47,7 @@ gamecenter.checkAuth(successCallback, failureCallback);
 
 ### getUserData
 
-Method for geting user information after auth
+Method for getting user information after auth
 ```
 var successCallback = function (status) {
     alert(status.isAuth);
