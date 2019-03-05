@@ -15,35 +15,43 @@
 
         GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
 
-        localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
-            CDVPluginResult* pluginResult = nil;
-            if (viewController != nil)
-            {
-                // Login required
-                [self.viewController presentViewController:viewController animated:YES completion:nil];
-            }
-            else
-            {
-                if (localPlayer.isAuthenticated)
+        if([[GKLocalPlayer localPlayer] authenticateHandler] == nil) {
+            localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
+                CDVPluginResult* pluginResult = nil;
+                if (viewController != nil)
                 {
-                    NSDictionary* user = @{
-                        @"alias":localPlayer.alias,
-                        @"displayName":localPlayer.displayName,
-                        @"playerID":localPlayer.playerID
-                    };
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
-                }
-                else if (error != nil)
-                {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    // Login required
+                    [self.viewController presentViewController:viewController animated:YES completion:nil];
                 }
                 else
                 {
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+                    if (localPlayer.isAuthenticated)
+                    {
+                        NSDictionary* user = @{
+                                               @"alias":localPlayer.alias,
+                                               @"displayName":localPlayer.displayName,
+                                               @"playerID":localPlayer.playerID
+                                               };
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
+                    }
+                    else if (error != nil)
+                    {
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    }
+                    else
+                    {
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"already set"];
+                    }
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                 }
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-            }
-        };
+            };
+        }
+        else
+        {
+            CDVPluginResult* pluginResult = nil;
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"already set"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
     }];
 }
 
