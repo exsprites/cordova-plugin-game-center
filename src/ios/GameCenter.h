@@ -20,5 +20,6 @@
 - (void) reportAchievement:(CDVInvokedUrlCommand*)command;
 - (void) resetAchievements:(CDVInvokedUrlCommand*)command;
 - (void) getAchievements:(CDVInvokedUrlCommand*)command;
+- (void) getScore:(CDVInvokedUrlCommand*)command;
 
 @end

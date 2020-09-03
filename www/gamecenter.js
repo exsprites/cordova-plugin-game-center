@@ -1,6 +1,7 @@
 
 var exec = require("cordova/exec");
 
+
 module.exports = {
     name: "GameCenter",
     _loggedin: false,
@@ -45,4 +46,9 @@ module.exports = {
     getAchievements: function (success, failure) {
         exec(success, failure, "GameCenter", "getAchievements", []);
     },
+    getScore: function (success, failure, data) {
+        exec(success, failure, "GameCenter", "getScore", [data]);
+    },
 }
+
+
