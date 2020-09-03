@@ -1,3 +1,8 @@
+
+# [WIP] This version is a copy for my own purpose - won't be maintained
+
+This is my fork to combine various forks to my personal super fork which contains the features I need right now in the way I need them. Expects the docs to be outdated.
+
 ## Game Center Plugin for Apache Cordova [![npm version](https://badge.fury.io/js/cordova-plugin-game-center.svg)](http://badge.fury.io/js/cordova-plugin-game-center)
 
 This plugin allows developers to utilise the iOS Game Center in their Cordova / PhoneGap app.
