@@ -373,7 +373,7 @@
 }
 
 
-- (NSString*)base64forData:(NSData*)theData 
+- (NSString*)base64forData:(NSData*)theData
 {
     const uint8_t* input = (const uint8_t*)[theData bytes];
     NSInteger length = [theData length];
@@ -432,5 +432,70 @@
     }];
 }
 
+- (void) isAccessPointAvailable:(CDVInvokedUrlCommand*)command
+{
+    __block CDVPluginResult* pluginResult = nil;
+    if (@available(iOS 14.0, *)) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+    }
+    else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
+    }
 
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+}
+
+- (void) modifyAccessPoint:(CDVInvokedUrlCommand*)command
+{
+    __block CDVPluginResult* pluginResult = nil;
+    if (@available(iOS 14.0, *)) {
+
+        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
+        if ((NSNull *)options == [NSNull null])
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
+        }
+        else
+        {
+            NSString* position = nil;
+
+            position = [options objectForKey:@"location"];
+            if (position && [position length] > 0) {
+
+                if ([position isEqualToString:@"TOP_LEFT"]) {
+                    [GKAccessPoint shared].location = GKAccessPointLocationTopLeading;
+                }
+                else if ([position isEqualToString:@"TOP_RIGHT"]) {
+                    [GKAccessPoint shared].location = GKAccessPointLocationTopTrailing;
+                }
+                else if ([position isEqualToString:@"BOTTOM_LEFT"]) {
+                    [GKAccessPoint shared].location = GKAccessPointLocationBottomLeading;
+                }
+                else if ([position isEqualToString:@"BOTTOM_RIGHT"]) {
+                    [GKAccessPoint shared].location = GKAccessPointLocationBottomTrailing;
+                }
+            }
+
+            NSString* highlights = nil;
+            highlights = [options objectForKey:@"showHighlights"];
+            if (highlights && [highlights length] > 0) {
+                [GKAccessPoint shared].showHighlights = [highlights boolValue];
+            }
+
+            NSString* active = nil;
+            active = [options objectForKey:@"active"];
+            if (active && [active length] > 0) {
+                [GKAccessPoint shared].active = [active boolValue];
+            }
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+        }
+    }
+    else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
+    }
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 @end

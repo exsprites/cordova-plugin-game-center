@@ -22,4 +22,7 @@
 - (void) getAchievements:(CDVInvokedUrlCommand*)command;
 - (void) getScore:(CDVInvokedUrlCommand*)command;
 
+- (void) isAccessPointAvailable:(CDVInvokedUrlCommand*)command;
+- (void) modifyAccessPoint:(CDVInvokedUrlCommand*)command;
+
 @end
