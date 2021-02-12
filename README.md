@@ -1,9 +1,65 @@
 
-# [WIP] This version is a copy for my own purpose - won't be maintained
+# Work in progress fork
 
-This is my fork to combine various forks to my personal super fork which contains the features I need right now in the way I need them. Expects the docs to be outdated.
+This is my fork to support GameCenter in my Cordova projects. I won't
+have time to fix bugs or give any support but I still share my progress 
+and new features here. 
 
-## Game Center Plugin for Apache Cordova [![npm version](https://badge.fury.io/js/cordova-plugin-game-center.svg)](http://badge.fury.io/js/cordova-plugin-game-center)
+
+# GameCenter Access Point in Cordvoa
+
+Add some basic support for [GameCenter Access Point](https://developer.apple.com/design/human-interface-guidelines/game-center/overview/access-point/) (iOS 14+).
+
+
+```js
+// CHECK IF AVAILABLE
+
+window.gamecenter.isAccessPointAvailable((available) => {
+        // Basically you know the API should be there
+        // Still need to call `checkAuth()` etc.
+    },
+    (err) => {}
+);
+
+
+// SHOW, HIDE and MODIFY the access point
+const accessPointProps = {
+    
+    // OPTIONAL, sets position of the accesspoint
+    //
+    //
+    // values: "TOP_LEFT"|"TOP_RIGHT"|"BOTTOM_LEFT"|"BOTTOM_RIGHT"
+    // maps to: https://developer.apple.com/documentation/gamekit/gkaccesspointlocation?language=objc
+    location: "TOP_LEFT",  
+    
+    // OPTIONAL, if highlights shall be shown
+    //
+    // maps to: https://developer.apple.com/documentation/gamekit/gkaccesspoint/3618827-showhighlights?language=objc
+    showHighlights: true,
+    
+    // OPTIONAL, enable/disable access point
+    //
+    // maps to: https://developer.apple.com/documentation/gamekit/gkaccesspoint/3618827-showhighlights?language=objc
+    active: true,  
+};
+
+window.gamecenter.modifyAccessPoint(() => {
+        // success!
+    }, (err) => {
+        // failed!
+    },
+    accessPointProps,
+);
+
+
+// EXAMPLE hide access point
+window.gamecenter.modifyAccessPoint(() => {}, () => {}, { active: false });
+```
+
+---
+
+
+## Game Center Plugin for Apache Cordova 
 
 This plugin allows developers to utilise the iOS Game Center in their Cordova / PhoneGap app.
 
@@ -18,7 +74,7 @@ Adding Game Center support requires more than simple coding changes. To create a
 #### Latest version from GitHub
 
 ```
-cordova plugin add https://github.com/DiRaiks/cordova-plugin-game-center.git
+cordova plugin add https://github.com/CSchnackenberg/cordova-plugin-game-center.git
 ```
 
 You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
@@ -156,9 +212,8 @@ gamecenter.getAchievements(successCallback, failureCallback);
 
 ## Platforms
 
-Supports iOS 7 and iOS 8 (may have limited iOS 6 support). The Game Center is Apple specific and not applicable to other platforms.
+Should work on iOS14, but no guarantees 🤓.
 
-Please report any [issues](https://github.com/leecrossley/cordova-plugin-game-center/issues/new).
 
 ## License
 
