@@ -416,7 +416,7 @@
 
     [leaderboardRequest loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error) {
         if (error) {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         } else if (scores) {
             GKScore *localPlayerScore = leaderboardRequest.localPlayerScore;
 
@@ -425,7 +425,7 @@
                                         };
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:userScore];
         } else {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
