@@ -304,6 +304,7 @@
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
     NSString *showAchievements = [args objectForKey:@"showAchievements"];
+    NSString *showState = [args objectForKey:@"showState"];
 
     CDVPluginResult* pluginResult = nil;
 
@@ -320,6 +321,30 @@
         if ([showAchievements isEqualToString:@"true"])
         {
             gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+        }
+        else if ([showState isEqualToString:@"achievements"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+        }
+        else if ([showState isEqualToString:@"challenges"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateChallenges;
+        }
+        else if ([showState isEqualToString:@"profile"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateLocalPlayerProfile;
+        }
+        else if ([showState isEqualToString:@"dashboard"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateDashboard;
+        }
+        else if ([showState isEqualToString:@"friends"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateLocalPlayerFriendsList;
+        }
+        else if ([showState isEqualToString:@"default"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateDefault;
         }
         else
         {
